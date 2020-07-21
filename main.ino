@@ -1,5 +1,6 @@
 #include <Servo.h>
 #define trig 4
+#define useStop 1
 #define echo 2
 #define mA1 3
 #define mA2 5
@@ -33,15 +34,9 @@ void setup(){
 	pinMode(A0, OUTPUT);
 	pinMode(A1, OUTPUT);
 	pinMode(A7, OUTPUT);
-	pinMode(sP1, OUTPUT);
 	pinMode(sP2, OUTPUT);
 	pinMode(sP3, OUTPUT);
 	pinMode(sP4,OUTPUT);
-	sa2.attach(A2);
-	sa3.attach(A3);
-	sa4.attach(A4);
-	sa5.attach(A5);
-	sa6.attach(A6);
 	pinMode(sP6, OUTPUT);
 	digitalWrite(13,1);
 }
@@ -62,14 +57,15 @@ void driveA(int a){
 }
 void driveB(int b){
 	if(b==50){
-		digitalWrite(mB1,0);
-		digitalWrite(mB2,0);
+		analogWrite(mB1,0);
+		analogWrite(mB2,0);
 	}else if(b>50){
 		b = map(b, 50, 100, 0, 255);
 		analogWrite(mB1,b);
 		analogWrite(mB2,0);
 	}else if(b<50){
 		b = map(b, 0, 50, 255, 0);
+		Serial.println(b);
 		analogWrite(mB1,0);
 		analogWrite(mB2,b);
 	}
@@ -87,24 +83,27 @@ int distance(){
 	return distance;
 }
 int stop(){
-	digitalWrite(13,0);
-	digitalWrite(A0,0);
-	digitalWrite(A1,0);
-	driveA(50);
-	driveB(50);
-	while(1==1){
-		delay(5000);
-		if(distance()<8){
-			digitalWrite(13,1);
-			digitalWrite(A0,1);
-			digitalWrite(A1,1);
+	if(useStop==1){
+		digitalWrite(13,0);
+		digitalWrite(A0,0);
+		digitalWrite(A1,0);
+		driveA(50);
+		driveB(50);
+		while(1==1){
 			delay(5000);
-			digitalWrite(13,0);
-			digitalWrite(A0,0);
-			digitalWrite(A1,0);
-			return 0;
+			if(distance()<8){
+				digitalWrite(13,1);
+				digitalWrite(A0,1);
+				digitalWrite(A1,1);
+				delay(5000);
+				digitalWrite(13,0);
+				digitalWrite(A0,0);
+				digitalWrite(A1,0);
+				return 0;
+			}
 		}
 	}
+	return 0;
 }
 
 
@@ -127,6 +126,7 @@ void loop(){
 				s1.write(val);
 				break;
 			case 'z'://s1 as pin
+				pinMode(sP1, OUTPUT);
 				analogWrite(sP1,val);
 				break;
 			case 'd'://s2
@@ -174,20 +174,25 @@ void loop(){
 				sa7.attach(A1);
 				sa7.write(val);
 				break;
-/*------------qwerty-is-analog-pins------------*/// 
+//------------qwerty-is-analog-pins------------/// 
 			case 'q':
+				sa2.attach(A2);
 				sa2.write(val);
 				break;
 			case 'w':
+				sa3.attach(A3);
 				sa3.write(val);
 				break;
 			case 'e':
+				sa4.attach(A4);
 				sa4.write(val);
 				break;
 			case 'r':
+				sa5.attach(A5);
 				sa5.write(val);
 				break;
 			case 't':
+				sa6.attach(A6);
 				sa6.write(val);
 				break;
 			case 'y':
