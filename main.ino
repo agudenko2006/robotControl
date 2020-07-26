@@ -22,18 +22,6 @@ Servo sa5;
 Servo sa6;
 Servo sa7;
 Servo sd6;
-float frequency = 100; //the frequency of the cycle
-float cycle_length; //how long each pwm cycle should be on for
-
-float duty_cycle; //the percentage of power we want
-
-int time_on; // how long the output should be high
-
-int time_off; //how long the output should be low
-
-float v_out; //the amount of voltage the led should draw
-
-int pwm_pin = mB1; // pin that will act like a pwm pin
 void setup(){
 	Serial.begin(9600);
 	Serial.setTimeout(50);
@@ -49,8 +37,6 @@ void setup(){
 	pinMode(sP3, OUTPUT);
 	pinMode(sP4,OUTPUT);
 	pinMode(sP6, OUTPUT);
-	digitalWrite(mB1,0);//soft pwm
-	cycle_length = 1000000/frequency; //length of one pwm cycle in microseconds
 	digitalWrite(13,1);
 }
 
@@ -73,20 +59,12 @@ void driveB(int b){
 		analogWrite(mB1,0);
 		analogWrite(mB2,0);
 	}else if(b>50){
-		b = map(b, 50, 100, 0, 255);
-		duty_cycle = b/255; // percentage of power being drawn as decimal.
-		time_on = duty_cycle * cycle_length; // work out the time it should be on
-		time_off = cycle_length-time_on; // work out the time it should be off
-		if(time_on > 0){
-			digitalWrite(pwm_pin, HIGH);
-			delayMicroseconds(time_on); // turns led on for short anount of time
-		}
-		//analogWrite(mB1,b);
-		analogWrite(mB2,0);
+		b = map(b, 50, 100, 255, 0);
+		digitalWrite(mB1,1);
+		analogWrite(mB2,b);
 	}else if(b<50){
 		b = map(b, 0, 50, 255, 0);
-		Serial.println(b);
-		analogWrite(mB1,0);
+		digitalWrite(mB1,0);
 		analogWrite(mB2,b);
 	}
 }
