@@ -46,8 +46,8 @@ void driveA(int a){
 		digitalWrite(mA2,0);
 	}else if(a>50){
 		a = map(a, 50, 100, 0, 255);
-		analogWrite(mA1,a);
-		analogWrite(mA2,0);
+		analogWrite(mA1,1);
+		analogWrite(mA2,a);
 	}else if(a<50){
 		a = map(a, 0, 50, 255, 0);
 		analogWrite(mA1,0);
@@ -154,7 +154,7 @@ void loop(){
 				sd6.write(val);
 				break;
 			case 'u'://side servo as pin
-				digitalWrite(sP6,val);
+				analogWrite(sP6,val);
 				break;
 			case 'i':
 				digitalWrite(A0,val);
