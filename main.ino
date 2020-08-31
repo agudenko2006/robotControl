@@ -87,7 +87,7 @@ int stop(){
 		digitalWrite(A1,0);
 		driveA(50);
 		driveB(50);
-		while(1==1){
+		while(true){
 			delay(5000);
 			if(distance()<8){
 				digitalWrite(13,1);
